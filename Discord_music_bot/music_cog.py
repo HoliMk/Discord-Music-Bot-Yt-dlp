@@ -1,4 +1,3 @@
-from ast import alias
 import discord
 from discord.ext import commands
 import yt_dlp
@@ -94,7 +93,7 @@ class music_cog(commands.Cog):
             self.is_playing =True
             self.vc.resume()
 
-    @commands.command(name="resume", aliages=["r"], help="Resumes playing the current song")
+    @commands.command(name="resume", aliases=["r"], help="Resumes playing the current song")
     async def resum(self, ctx, *args):
         if self.is_paused:
             self.is_playing = True
