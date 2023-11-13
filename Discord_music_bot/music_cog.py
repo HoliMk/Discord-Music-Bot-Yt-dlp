@@ -1,7 +1,8 @@
+import os
 import discord
 from discord.ext import commands
 import yt_dlp
-
+import subprocess
 
 class music_cog(commands.Cog):
     def __init__(self, bot):
@@ -93,7 +94,7 @@ class music_cog(commands.Cog):
             self.is_playing =True
             self.vc.resume()
 
-    @commands.command(name="resume", aliases=["r"], help="Resumes playing the current song")
+    @commands.command(name="resume", aliages=["r"], help="Resumes playing the current song")
     async def resum(self, ctx, *args):
         if self.is_paused:
             self.is_playing = True
@@ -131,3 +132,21 @@ class music_cog(commands.Cog):
         self.is_playing = False
         self.is_paused = False
         await self.vc.disconnect()
+    
+    @commands.command(name="cutvideo", aliases=["cut", "c"], help="Cut a YouTube video from a timestamp to another timestamp")
+    async def cut_video(self, ctx, url, start_time, end_time, custom_filename):
+        ydl_opts = {'format': 'best', 'outtmpl': f'{custom_filename}.mp4'}
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(url, download=False)
+            video_url = info['url']  
+
+    # Use ffmpeg to cut the video from start_time to end_time and save it to a temporary file
+
+        temp_filename = f'temp_{custom_filename}.mp4'
+        cmd = ['ffmpeg', '-i', video_url, '-ss', start_time, '-to', end_time, '-c:v', 'copy', '-c:a', 'copy', temp_filename]
+        subprocess.run(cmd)
+    
+    # Upload the cut MP4 to the Discord channel and delete the temporary file
+
+        await ctx.send(f"Here is your cut video: {custom_filename}.mp4", file=discord.File(temp_filename))
+        os.remove(temp_filename)  # Delete the temporary file
