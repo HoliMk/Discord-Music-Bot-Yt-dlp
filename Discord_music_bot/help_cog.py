@@ -1,4 +1,3 @@
-import discord
 from discord.ext import commands
 
 class help_cog(commands.Cog):
@@ -15,6 +14,7 @@ General commands:
 /leave - Disconnected the bot from the voice channel
 /pause - pauses the current song being played or resumes if already paused
 /resume - resumes playing the current song
+/cutvideo - cuts youtube video to mp4 file from start time to end time !cutvideo URL START_TIME END_TIME
 ```
 """
         self.text_channel_list = []
